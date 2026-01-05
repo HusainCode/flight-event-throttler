@@ -10,7 +10,31 @@ import (
 	"time"
 )
 
+type Config struct {
+	Port         string
+	ReadTimeout  time.Duration
+	WriteTimeout time.Duration
+	IdleTimeout  time.Duration
+}
+
+func loadConfig() *Config {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	return &Config{
+		Port:         port,
+		ReadTimeout:  15 * time.Second,
+		WriteTimeout: 15 * time.Second,
+		IdleTimeout:  60 * time.Second,
+	}
+}
+
 func main() {
+	// Load configuration
+	config := loadConfig()
+
 	// Create HTTP server
 	mux := http.NewServeMux()
 
@@ -27,11 +51,11 @@ func main() {
 	})
 
 	server := &http.Server{
-		Addr:         ":8080",
+		Addr:         ":" + config.Port,
 		Handler:      mux,
-		ReadTimeout:  15 * time.Second,
-		WriteTimeout: 15 * time.Second,
-		IdleTimeout:  60 * time.Second,
+		ReadTimeout:  config.ReadTimeout,
+		WriteTimeout: config.WriteTimeout,
+		IdleTimeout:  config.IdleTimeout,
 	}
 
 	// Start server in goroutine
