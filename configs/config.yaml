@@ -1,1 +1,29 @@
-# Configuration file
+# Flight Event Throttler Configuration
+
+server:
+  port: 8080
+  read_timeout: 15s
+  write_timeout: 15s
+  idle_timeout: 60s
+
+opensky:
+  base_url: "https://opensky-network.org/api"
+  poll_interval: 10s
+  request_timeout: 30s
+  # Optional: Provide credentials for higher rate limits
+  # username: ""
+  # password: ""
+
+rate_limit:
+  events_per_second: 100
+  burst_size: 200
+  window_duration: 1s
+
+buffer:
+  type: "ring"  # Options: "ring" or "sliding_window"
+  size: 10000
+  batch_size: 100
+  flush_interval: 5s
+
+logging:
+  level: "INFO"  # Options: "DEBUG", "INFO", "ERROR"
